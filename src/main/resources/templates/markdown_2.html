@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown入力フォーム 2</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="form-container">
+    <h2>マークダウン入力フォーム 2</h2>
+    <form id="form" th:object="${specSheetStep2Form}" th:action="@{/submit/second}" method="post">
+
+      <!-- 前職 -->
+      <div class="form-group">
+        <h3>前職</h3>
+        <label for="previous-job-name">前職の名称</label>
+        <input type="text" id="previous-job-name" th:field="*{previousJobName}" placeholder="前職の名称を入力" required>
+        
+        <label for="previous-job-details">前職の詳細</label>
+        <textarea id="previous-job-details" th:field="*{previousJobDetails}" rows="4" placeholder="前職での仕事内容や役割を入力してください" required></textarea>
+      </div>
+
+      <!-- 業務外で取り組んでいること -->
+      <div id="outside-work-container" class="form-group">
+        <h3>業務外で取り組んでいること（最大3つまで）</h3>
+        <div class="outside-work-group">
+          <label>タイトル</label>
+          <input type="text" name="outsideWorkTitles[]" placeholder="例: オープンソース活動" required>
+          
+          <label>内容</label>
+          <textarea name="outsideWorkContents[]" rows="4" placeholder="具体的な内容を入力してください" required></textarea>
+        </div>
+      </div>
+      <button type="button" id="add-outside-work-btn" class="add-btn">＋ 業務外活動を追加</button>
+
+      <!-- 資格 -->
+      <div id="qualifications-container" class="form-group">
+        <h3>資格</h3>
+        <div class="qualification-group">
+          <label for="qualification-name">資格名</label>
+          <input type="text" name="qualificationNames[]" placeholder="例: 基本情報技術者試験" required>
+
+          <label for="qualification-year">取得年</label>
+          <select name="qualificationYears[]" required>
+            <option value="" disabled selected>年を選択</option>
+            <!-- 年は過去30年間を表示 -->
+            <th:block th:each="year : ${#numbers.sequence(1994, 2024)}">
+              <option th:value="${year}" th:text="${year}"></option>
+            </th:block>
+          </select>
+
+          <label for="qualification-month">取得月</label>
+          <select name="qualificationMonths[]" required>
+            <option value="" disabled selected>月を選択</option>
+            <option th:each="month : ${#numbers.sequence(1, 12)}" th:value="${month}" th:text="${month}"></option>
+          </select>
+        </div>
+      </div>
+      <button type="button" id="add-qualification-btn" class="add-btn">＋ 資格を追加</button>
+      <input type="hidden" th:value="${specSheetStep1Id}" name="specSheetStep1Id">
+      <button type="submit" class="submit-btn">次の入力へ進む</button>
+    </form>
+  </div>
+  <script src="/js/markdown-step2.js"></script>
+</body>
+</html>
