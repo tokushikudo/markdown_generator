@@ -34,6 +34,7 @@ body {
 .form-group label {
     display: block;
     font-weight: bold;
+    margin-top: 20px;
     margin-bottom: 5px;
     color: #555555;
 }
@@ -205,5 +206,79 @@ input:focus, textarea:focus, select:focus {
 
 .add-other-btn:hover {
     background-color: #0056b3;
+}
+
+/* 次の入力へ進むボタン */
+.next-btn {
+    background-color: #007bff; /* 青 */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.next-btn:hover {
+    background-color: #0056b3; /* 濃い青 */
+}
+
+/* 前の入力へ戻るボタン */
+.back-btn {
+    background-color: #dc3545; /* 赤 */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.back-btn:hover {
+    background-color: #c82333; /* 濃い赤 */
+}
+
+
+/* 特定のフォームを横並びに */
+#form, .back-form {
+    display: inline-block;    /* フォームをインラインブロック化 */
+    vertical-align: top;     /* ボタンの位置を揃える */
+    margin: 0 10px;          /* 各フォーム間に余白を追加 */
+}
+
+/* 親要素でボタンを横並びにする */
+.button-container {
+    display: inline-flex;              /* 子要素を横並びに */
+    justify-content: space-between; /* ボタン間のスペースを確保 */
+    gap: 10px;                 /* ボタン間の間隔 */
+    margin-top: 20px;          /* 上部に余白を追加 */
+}
+
+/* ボタンの幅を調整 */
+.button-container button {
+    flex: 1;                   /* 各フォームを均等な幅に */
+}
+
+/* ボタンの色とホバーエフェクト */
+.next-btn {
+    background-color: #007bff; /* 青色 */
+    color: white;
+    border: none;
+}
+
+.next-btn:hover {
+    background-color: #0056b3; /* ホバー時の濃い青 */
+}
+
+.back-btn {
+    background-color: #dc3545; /* 赤色 */
+    color: white;
+    border: none;
+}
+
+.back-btn:hover {
+    background-color: #c82333; /* ホバー時の濃い赤 */
 }
 

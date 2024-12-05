@@ -8,7 +8,7 @@
 </head>
 <body>
   <div class="form-container">
-    <h2>マークダウン入力フォーム 2</h2>
+    <h2>スペックシート出力フォーム 2</h2>
     <form id="form" th:object="${specSheetStep2Form}" th:action="@{/submit/second}" method="post">
 
       <!-- 前職 -->
@@ -59,8 +59,13 @@
       </div>
       <button type="button" id="add-qualification-btn" class="add-btn">＋ 資格を追加</button>
       <input type="hidden" th:value="${specSheetStep1Id}" name="specSheetStep1Id">
-      <button type="submit" class="submit-btn">次の入力へ進む</button>
-    </form>
+    <div class="button-container">
+        <button type="submit" class="submit-btn next-btn">次の入力へ進む</button>
+      </form>
+      <form type="submit" th:action="@{/}">
+        <button type="submit" class="submit-btn back-btn">前の入力へ戻る</button>
+      </form>
+    </div>
   </div>
   <script src="/js/markdown-step2.js"></script>
 </body>

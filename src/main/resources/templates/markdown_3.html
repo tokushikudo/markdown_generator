@@ -8,7 +8,7 @@
 </head>
 <body>
   <div class="form-container">
-    <h2>プロジェクト経歴入力フォーム</h2>
+    <h2>スペックシート出力フォーム 3</h2>
     <form id="form" th:object="${specSheetStep3Form}" th:action="@{/submit/third}" method="post">
         <!-- プロジェクト経歴コンテナ -->
         <div id="projects-container" class="form-group">
@@ -125,8 +125,13 @@
         <button type="button" id="add-project-btn" class="add-btn">＋ プロジェクト経歴を追加</button>
         <input type="hidden" th:value="${specSheetStep1Id}" name="specSheetStep1Id">
         <input type="hidden" th:value="${specSheetStep2Id}" name="specSheetStep2Id">
-        <button type="submit" class="submit-btn">ダウンロード</button>
-    </form>
+      <div class="button-container">
+          <button type="submit" class="submit-btn next-btn">ダウンロード</button>
+        </form>
+        <form type="submit" th:action="@{/submit/first}">
+            <button type="submit" class="submit-btn back-btn">前の入力へ戻る</button>
+        </form>
+      </div>
   </div>
   <script src="/js/markdown-step3.js"></script>
 </body>
