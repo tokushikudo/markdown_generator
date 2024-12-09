@@ -122,6 +122,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
             <label for="diagram">構成図アップロード</label>
             <input type="file" name="diagrams[]">
+
+            <!-- プロジェクト削除ボタン -->
+            <button type="button" class="remove-project-btn">プロジェクトを削除</button>
+
         `;
         return div;
     };
@@ -130,10 +134,10 @@ document.addEventListener("DOMContentLoaded", () => {
     addProjectBtn.addEventListener("click", () => {
         const newProject = createProjectTemplate();
         projectsContainer.appendChild(newProject);
-
+    
         // 新規プロジェクトのスキル処理を追加
         initializeSkillFields(newProject);
-    });
+    });    
 
     // 初期ロード時に既存プロジェクトのスキル処理を設定
     initializeSkillFields(document);
@@ -180,6 +184,19 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // プロジェクト削除処理
+    projectsContainer.addEventListener("click", (event) => {
+        if (event.target.classList.contains("remove-project-btn")) {
+            const projectGroup = event.target.closest(".project-group");
+            if (projectGroup) {
+                projectsContainer.removeChild(projectGroup);
+            }
+        }
+    });
+    
+
+
+
     // スキル項目を作成する関数
     function createSkillElement(value, text, list, name) {
         const skillDiv = document.createElement("div");
@@ -207,4 +224,53 @@ document.addEventListener("DOMContentLoaded", () => {
         skillDiv.appendChild(removeBtn);
         return skillDiv;
     }
+    
+    // スキル検証関数
+    function validateSkills() {
+        const missingSkills = [];
+    
+        skillFields.forEach(({ list }) => {
+            const listContainers = document.querySelectorAll(list);
+            listContainers.forEach(listContainer => {
+                if (!listContainer.querySelector(".skill-item")) {
+                    const skillName = listContainer.closest(".skill-group").querySelector("label").innerText;
+                    missingSkills.push(skillName);
+                }
+            });
+        });
+    
+        if (missingSkills.length > 0) {
+            alert(`以下のスキル項目が選択されていません：${missingSkills.join("、")}`);
+            return false;
+        }
+    
+        return true;
+    }
+
+    // 構成図アップロード検証関数
+    function validateDiagramUpload() {
+        const projectGroups = document.querySelectorAll(".project-group");
+        let isValid = true;
+
+        projectGroups.forEach((projectGroup, index) => {
+            const fileInput = projectGroup.querySelector('input[type="file"][name="diagrams[]"]');
+            if (!fileInput || fileInput.files.length === 0) {
+                alert(`プロジェクト ${index + 1} の構成図がアップロードされていません。`);
+                isValid = false;
+            }
+        });
+
+        return isValid;
+    }
+
+    // フォーム送信時の処理
+    form.addEventListener("submit", (event) => {
+        const isSkillsValid = validateSkills();
+        const isDiagramValid = validateDiagramUpload();
+
+        if (!isSkillsValid || !isDiagramValid) {
+            event.preventDefault(); // フォーム送信を中止
+        }
+    });
+
 });

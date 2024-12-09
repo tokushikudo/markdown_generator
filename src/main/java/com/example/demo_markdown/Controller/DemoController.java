@@ -50,7 +50,7 @@ public class DemoController {
 
 
     @RequestMapping("/")
-    public String form1(Integer specSheetStep1Id, Model model) throws Exception {
+    public String form1(Integer specSheetStep1Id, Integer specSheetStep2Id, Model model) throws Exception {
         // 初回遷移に関してはmarkdown1にフォワード
         if (specSheetStep1Id == null) {
             return "markdown_1";
@@ -60,6 +60,7 @@ public class DemoController {
         SpecSheetStep1Form form1 = demoMarkdownService.findBySpecSheet1Id(specSheetStep1Id);
         model.addAttribute("specSheetStep1Form", form1);
         model.addAttribute("specSheetStep1Id", specSheetStep1Id);
+        model.addAttribute("specSheetStep2Id", specSheetStep2Id);
 
         // titles と contents のペアリストを作成
         List<Map<String, String>> pairedList = new ArrayList<>();
