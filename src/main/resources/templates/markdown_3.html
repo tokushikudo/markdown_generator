@@ -128,8 +128,10 @@
       <div class="button-container">
           <button type="submit" class="submit-btn next-btn">ダウンロード</button>
         </form>
-        <form type="submit" th:action="@{/submit/first}">
+        <form type="submit" th:action="@{/submit/first}" method="post">
             <button type="submit" class="submit-btn back-btn">前の入力へ戻る</button>
+            <input type="hidden" th:value="${specSheetStep1Id}" name="specSheetStep1Id">
+            <input type="hidden" th:value="${specSheetStep2Id}" name="specSheetStep2Id">
         </form>
       </div>
   </div>

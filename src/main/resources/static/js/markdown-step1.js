@@ -1,4 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const initialDataScript = document.getElementById("initial-data");
+    
+    // エスケープされたHTMLエンティティをデコード
+    const parser = new DOMParser();
+    const decodedText = parser.parseFromString(initialDataScript.textContent, "text/html").documentElement.textContent;
+
+    // JSON.parseでデコード後のテキストを解析
+    const initialData = decodedText ? JSON.parse(decodedText) : {};
+    console.log(initialData); // デバッグ用：初期データを確認
+
     const form = document.getElementById("form");
     const skillFields = [
         { select: "languages", other: "language-other", label: "言語", list: "languages-list", name: "languages[]" },
@@ -6,6 +16,28 @@ document.addEventListener("DOMContentLoaded", () => {
         { select: "libraries", other: "library-other", label: "ライブラリ", list: "libraries-list", name: "libraries[]" },
         { select: "os-software", other: "os-software-other", label: "OS・ソフトウェア", list: "os-software-list", name: "osSoftware[]" }
     ];
+
+    // 初期化処理：スキル項目の初期値設定
+    skillFields.forEach(({ select, list, name }) => {
+        const selectElement = document.getElementById(select);
+        const listContainer = document.getElementById(list);
+
+        // 初期値の取得（JSONから対応する値を取得）
+        const initialValues = initialData[select] || []; // 該当データが無ければ空配列
+
+        // 初期値を各スキルリストに追加
+        initialValues.forEach(value => {
+            const option = Array.from(selectElement.options).find(opt => opt.value === value); // セレクトオプションを検索
+            const text = option ? option.text : value; // オプションが無い場合は値をそのまま表示
+            const skillDiv = createSkillElement(value, text, list, name);
+            listContainer.appendChild(skillDiv);
+
+            // セレクトボックス内の該当オプションを選択状態に設定
+            if (option) option.selected = true;
+        });
+    });
+
+
     const appealsContainer = document.getElementById("appeals-container");
     const addAppealBtn = document.getElementById("add-appeal-btn");
 
@@ -117,4 +149,39 @@ document.addEventListener("DOMContentLoaded", () => {
         skillDiv.appendChild(removeBtn);
         return skillDiv;
     }
+
+
+    // スキル入力がnullでないかをチェックする関数
+    function validateSkills() {
+        const skillFields = [
+            { list: "languages-list", label: "言語" },
+            { list: "frameworks-list", label: "フレームワーク" },
+            { list: "libraries-list", label: "ライブラリ" },
+            { list: "os-software-list", label: "OS・ソフトウェア" }
+        ];
+
+        const missingSkills = skillFields.filter(({ list }) => {
+            const listContainer = document.getElementById(list);
+            if (!listContainer) {
+                return true; // 見つからない場合、未入力扱い
+            }
+            return listContainer.children.length === 1;
+        });
+
+        if (missingSkills.length > 0) {
+            const missingLabels = missingSkills.map(({ label }) => label).join("、");
+            alert(`以下のスキル項目が選択されていません：${missingLabels}`);
+            return false; // フォーム送信を中止
+        }
+
+        return true; // すべての項目が入力されている
+    }
+
+    // フォーム送信時にスキル入力を検証
+    form.addEventListener("submit", (event) => {
+        if (!validateSkills()) {
+            event.preventDefault(); // フォーム送信を中止
+        }
+    });
+
 });

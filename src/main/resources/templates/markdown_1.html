@@ -32,23 +32,22 @@
         <!-- スキル入力 -->
         <div class="form-group">
             <h3>スキル</h3>
-
             <!-- 言語 -->
             <div class="skill-group">
-                <label for="languages">言語</label>
-                <select id="languages" multiple>
-                    <option value="Java">Java</option>
-                    <option value="JavaScript">JavaScript</option>
-                    <option value="Python">Python</option>
-                    <option value="C#">C#</option>
-                    <option value="Ruby">Ruby</option>
-                </select>
-                <input type="text" id="language-other" placeholder="その他の言語を入力" class="hidden">
-                <button type="button" id="add-language-other" class="add-other-btn">登録</button>
-                <div id="languages-list" class="selected-skills">
+              <label for="languages">言語</label>
+              <select id="languages" name="languages" multiple>
+                  <option value="Java">Java</option>
+                  <option value="JavaScript">JavaScript</option>
+                  <option value="Python">Python</option>
+                  <option value="C#">C#</option>
+                  <option value="Ruby">Ruby</option>
+              </select>
+              <input type="text" id="language-other" placeholder="その他の言語を入力" class="hidden">
+              <button type="button" id="add-language-other" class="add-other-btn">登録</button>
+              <div id="languages-list" class="selected-skills">
                   <label>選択されている言語</label>
-                    <!-- hidden inputはJSで動的に追加 -->
-                </div>
+                  <!-- 初期状態はJSで追加 -->
+              </div>
             </div>
 
             <!-- フレームワーク -->
@@ -107,20 +106,38 @@
 
         <!-- アピールポイント -->
         <div id="appeals-container" class="form-group">
-          <h3>アピールポイント（最大3つまで）</h3>
-          <!-- 初期アピールポイント -->
-          <div class="appeal-group">
-              <label>タイトル</label>
-              <input type="text" name="titles[]" placeholder="例: 向上心" required>
-              <label>内容</label>
-              <textarea name="contents[]" rows="4" placeholder="具体的な内容を入力してください" required></textarea>
+          <div th:if="${pairedList != null}">
+              <h3>アピールポイント（最大3つまで）</h3>
+              <div th:each="pair : ${pairedList}">
+                  <div class="appeal-group">
+                      <label>タイトル</label>
+                      <input type="text" name="titles[]" th:value="${pair.title}" placeholder="例: 向上心" required>
+      
+                      <label>内容</label>
+                      <textarea name="contents[]" rows="4" th:text="${pair.content}" placeholder="具体的な内容を入力してください" required></textarea>
+                  </div>
+              </div>
           </div>
-      </div>
+      
+          <div th:if="${pairedList == null}">
+              <h3>アピールポイント</h3>
+              <div class="appeal-group">
+                  <label>タイトル</label>
+                  <input type="text" name="titles[]" placeholder="例: 向上心" required>
+      
+                  <label>内容</label>
+                  <textarea name="contents[]" rows="4" placeholder="具体的な内容を入力してください" required></textarea>
+              </div>
+          </div>
+        </div>      
       <button type="button" id="add-appeal-btn" class="add-btn">＋ アピールポイント追加</button>
-
-        <button type="submit" class="submit-btn">次の入力へ進む</button>
+      <input type="hidden" th:value="${specSheetStep1Id}" name="specSheetStep1Id">
+      <button type="submit" class="submit-btn">次の入力へ進む</button>
     </form>
   </div>
+  <script id="initial-data" type="application/json">
+    [[${initialData}]]
+  </script>
   <script src="/js/markdown-step1.js"></script>
 </body>
 </html>
