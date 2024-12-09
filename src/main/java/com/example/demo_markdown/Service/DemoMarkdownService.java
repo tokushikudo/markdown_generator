@@ -306,12 +306,6 @@ public class DemoMarkdownService {
         specSheetStep1.setEngineerType(form.getEngineerType());
         specSheetStep1.setEngineerId(form.getEngineerId());
 
-        // フォームデータの成形
-        form.getLanguages().remove(0);
-        form.getFrameworks().remove(0);
-        form.getLibraries().remove(0);
-        form.getOsSoftware().remove(0);
-
         specSheetStep1.setLanguages(String.join(",", form.getLanguages())); // カンマ区切りに変換
         specSheetStep1.setFrameworks(String.join(",", form.getFrameworks()));
         specSheetStep1.setLibraries(String.join(",", form.getLibraries()));
@@ -323,6 +317,33 @@ public class DemoMarkdownService {
         Integer step1Id = demoMarkdownRepository.insert(specSheetStep1);
         return step1Id;
     }
+
+
+    /**
+     * 1ページ目の内容を保存
+     * formとDomainの組み換えを行ってから格納（リストはそのままではDBに格納できない）
+     * @param form
+     */
+    public void updateStep1(SpecSheetStep1Form form, Integer specSheetStep1Id) {
+        SpecSheetStep1 specSheetStep1 = new SpecSheetStep1();
+
+        // フォームデータをエンティティに変換
+        specSheetStep1.setId(specSheetStep1Id);
+        specSheetStep1.setEngineerType(form.getEngineerType());
+        specSheetStep1.setEngineerId(form.getEngineerId());
+
+        specSheetStep1.setLanguages(String.join(",", form.getLanguages())); // カンマ区切りに変換
+        specSheetStep1.setFrameworks(String.join(",", form.getFrameworks()));
+        specSheetStep1.setLibraries(String.join(",", form.getLibraries()));
+        specSheetStep1.setOsSoftware(String.join(",", form.getOsSoftware()));
+        specSheetStep1.setTitles(String.join(",", form.getTitles()));
+        specSheetStep1.setContents(String.join(",", form.getContents()));
+
+        // エンティティを保存
+        demoMarkdownRepository.update(specSheetStep1);
+    }
+
+
 
     /**
      * 1ページ目の情報をDBから取得
@@ -357,14 +378,40 @@ public class DemoMarkdownService {
         return step2Id;
     }
 
+
+    /**
+     * 2ページ目の内容を更新
+     * formとDomainの組み換えを行ってから格納（リストはそのままではDBに格納できない）
+     * @param form
+     */
+    public void updateStep2(SpecSheetStep2Form form, Integer page1Id, Integer page2Id) {
+        SpecSheetStep2 specSheetStep = new SpecSheetStep2();
+
+        // フォームデータをエンティティに変換
+        specSheetStep.setId(page2Id);
+        specSheetStep.setPage1Id(page1Id);
+        specSheetStep.setPreviousJobName(form.getPreviousJobName());
+        specSheetStep.setPreviousJobDetails(form.getPreviousJobDetails());
+        specSheetStep.setOutsideWorkTitles(String.join(",", form.getOutsideWorkTitles())); // カンマ区切りに変換
+        specSheetStep.setOutsideWorkContents(String.join(",", form.getOutsideWorkContents()));
+        specSheetStep.setQualificationNames(String.join(",", form.getQualificationNames()));
+        specSheetStep.setQualificationYears(String.join(",", form.getQualificationYears()));
+        specSheetStep.setQualificationMonths(String.join(",", form.getQualificationMonths()));
+
+        // エンティティを保存
+        demoMarkdownRepository.updateSecond(specSheetStep);
+    }
+
+
+
     /**
      * 2ページ目の情報をDBから取得
      * @param specSheetStep1
      * @return
      */
-    public SpecSheetStep2Form findBySpecSheet2Id(Integer specSheetStep2Id) {
+    public SpecSheetStep2 findBySpecSheet2Id(Integer specSheetStep2Id) {
         SpecSheetStep2 specSheetStep2 = demoMarkdownRepository.findBySpecSheetStep2Id(specSheetStep2Id);
-        return convertToForm2(specSheetStep2);
+        return specSheetStep2;
     }
 
 

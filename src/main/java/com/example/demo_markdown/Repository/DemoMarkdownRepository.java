@@ -91,6 +91,41 @@ public class DemoMarkdownRepository {
 	}
 
 	/**
+	 * 1ページ目の情報を更新
+	 * @param user
+	 * @return
+	 */
+	public void update(SpecSheetStep1 spec) {
+		SqlParameterSource param = new BeanPropertySqlParameterSource(spec);
+		String sql = """
+        UPDATE markdown1 SET engineer_type=:engineerType, engineer_id=:engineerId, 
+        languages=:languages, frameworks=:frameworks, libraries=:libraries,  
+        os_software=:osSoftware, titles=:titles, contents=:contents WHERE id=:id;
+        """;	
+		template.update(sql, param);
+	}
+
+
+	/**
+      * idをもとにスペックシートの2ページ目を条件一致検索
+      */
+	  public SpecSheetStep2 findBySpecSheetStep2Id(Integer id) {
+        String findByIdSql = """
+			SELECT id, page1_id, previous_job_name, previous_job_details, outside_work_titles, 
+			outside_work_contents, qualification_names, qualification_years, qualification_months
+			FROM markdown2 WHERE id=:id;
+			""";
+        SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
+		List<SpecSheetStep2> specList = template.query(findByIdSql, param, SPEC_SHEET_STEP2_ROW_MAPPER);
+        if (specList == null || specList.isEmpty()) {
+            return null;
+        }
+        return specList.get(0);
+    }
+
+
+
+	/**
 	 * 2ページ目の内容をDB登録
 	 * @param user
 	 * @return
@@ -112,20 +147,20 @@ public class DemoMarkdownRepository {
 	}
 
 	/**
-      * idをもとにスペックシートの2ページ目を条件一致検索
-      */
-	  public SpecSheetStep2 findBySpecSheetStep2Id(Integer id) {
-        String findByIdSql = """
-			SELECT id, page1_id, previous_job_name, previous_job_details, outside_work_titles, 
-			outside_work_contents, qualification_names, qualification_years, qualification_months
-			FROM markdown2 WHERE id=:id;
-			""";
-        SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
-		List<SpecSheetStep2> specList = template.query(findByIdSql, param, SPEC_SHEET_STEP2_ROW_MAPPER);
-        if (specList == null || specList.isEmpty()) {
-            return null;
-        }
-        return specList.get(0);
-    }
+	 * 2ページ目の情報を更新
+	 * @param user
+	 * @return
+	 */
+	public void updateSecond(SpecSheetStep2 spec) {
+		SqlParameterSource param = new BeanPropertySqlParameterSource(spec);
+		String sql = """
+        UPDATE markdown2 SET page1_id=:page1Id, previous_job_name=:previousJobName, 
+        previous_job_details=:previousJobDetails, outside_work_titles=:outsideWorkTitles, 
+		outside_work_contents=:outsideWorkContents, qualification_names=:qualificationNames, 
+		qualification_years=:qualificationYears, qualification_months=:qualificationMonths 
+		WHERE id=:id;
+        """;	
+		template.update(sql, param);
+	}
     
 }

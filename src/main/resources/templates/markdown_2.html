@@ -23,47 +23,93 @@
 
       <!-- 業務外で取り組んでいること -->
       <div id="outside-work-container" class="form-group">
-        <h3>業務外で取り組んでいること（最大3つまで）</h3>
-        <div class="outside-work-group">
-          <label>タイトル</label>
-          <input type="text" name="outsideWorkTitles[]" placeholder="例: オープンソース活動" required>
-          
-          <label>内容</label>
-          <textarea name="outsideWorkContents[]" rows="4" placeholder="具体的な内容を入力してください" required></textarea>
+        <div th:if="${pairedList != null}">
+          <h3>業務外で取り組んでいること（最大3つまで）</h3>
+          <div th:each="pair : ${pairedList}">
+            <div class="outside-work-group">
+              <label>タイトル</label>
+              <input type="text" name="outsideWorkTitles[]" th:value="${pair['title']}"
+              placeholder="例: オープンソース活動" required>
+              <label>内容</label>
+              <textarea name="outsideWorkContents[]" rows="4" th:text="${pair['content']}" placeholder="具体的な内容を入力してください" required></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div th:if="${pairedList == null}">
+          <h3>業務外で取り組んでいること（最大3つまで）</h3>
+            <div class="outside-work-group">
+              <label>タイトル</label>
+              <input type="text" name="outsideWorkTitles[]" placeholder="例: オープンソース活動" required>
+              
+              <label>内容</label>
+              <textarea name="outsideWorkContents[]" rows="4" placeholder="具体的な内容を入力してください" required></textarea>
+            </div>
         </div>
       </div>
       <button type="button" id="add-outside-work-btn" class="add-btn">＋ 業務外活動を追加</button>
 
       <!-- 資格 -->
       <div id="qualifications-container" class="form-group">
-        <h3>資格</h3>
-        <div class="qualification-group">
-          <label for="qualification-name">資格名</label>
-          <input type="text" name="qualificationNames[]" placeholder="例: 基本情報技術者試験" required>
+        <div th:if="${qualificationList != null}">
+          <h3>資格</h3>
+          <div th:each="qualification : ${qualificationList}">
+            <div class="qualification-group">
+              <label for="qualification-name">資格名</label>
+              <input type="text" name="qualificationNames[]" th:value="${qualification['name']}" placeholder="例: 基本情報技術者試験" required>
 
-          <label for="qualification-year">取得年</label>
-          <select name="qualificationYears[]" required>
-            <option value="" disabled selected>年を選択</option>
-            <!-- 年は過去30年間を表示 -->
-            <th:block th:each="year : ${#numbers.sequence(1994, 2024)}">
-              <option th:value="${year}" th:text="${year}"></option>
-            </th:block>
-          </select>
+              <label for="qualification-year">取得年</label>
+              <select name="qualificationYears[]" required>
+                <option value="" disabled selected>年を選択</option>
+                <th:block th:each="year : ${#numbers.sequence(1994, 2024)}">
+                  <option th:value="${year}" th:text="${year}" th:selected="${qualification['year'] == year}"></option>
+                </th:block>
+              </select>
 
-          <label for="qualification-month">取得月</label>
-          <select name="qualificationMonths[]" required>
-            <option value="" disabled selected>月を選択</option>
-            <option th:each="month : ${#numbers.sequence(1, 12)}" th:value="${month}" th:text="${month}"></option>
-          </select>
+              <label for="qualification-month">取得月</label>
+              <select name="qualificationMonths[]" required>
+                <option value="" disabled selected>月を選択</option>
+                <th:block th:each="month : ${#numbers.sequence(1, 12)}">
+                  <option th:value="${month}" th:text="${month}" th:selected="${qualification['month'] == month}"></option>
+                </th:block>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div th:if="${qualificationList == null}">
+          <h3>資格</h3>
+            <div class="qualification-group">
+              <label for="qualification-name">資格名</label>
+              <input type="text" name="qualificationNames[]" placeholder="例: 基本情報技術者試験" required>
+
+              <label for="qualification-year">取得年</label>
+              <select name="qualificationYears[]" required>
+                <option value="" disabled selected>年を選択</option>
+                <!-- 年は過去30年間を表示 -->
+                <th:block th:each="year : ${#numbers.sequence(1994, 2024)}">
+                  <option th:value="${year}" th:text="${year}"></option>
+                </th:block>
+              </select>
+
+              <label for="qualification-month">取得月</label>
+              <select name="qualificationMonths[]" required>
+                <option value="" disabled selected>月を選択</option>
+                <option th:each="month : ${#numbers.sequence(1, 12)}" th:value="${month}" th:text="${month}"></option>
+              </select>
+            </div>
         </div>
       </div>
+
       <button type="button" id="add-qualification-btn" class="add-btn">＋ 資格を追加</button>
       <input type="hidden" th:value="${specSheetStep1Id}" name="specSheetStep1Id">
+      <input type="hidden" th:value="${specSheetStep2Id}" name="specSheetStep2Id">
     <div class="button-container">
         <button type="submit" class="submit-btn next-btn">次の入力へ進む</button>
       </form>
       <form type="submit" th:action="@{/}">
         <button type="submit" class="submit-btn back-btn">前の入力へ戻る</button>
+        <input type="hidden" th:value="${specSheetStep1Id}" name="specSheetStep1Id">
       </form>
     </div>
   </div>
